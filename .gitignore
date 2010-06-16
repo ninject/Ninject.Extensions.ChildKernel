@@ -1,0 +1,10 @@
+
+/build/*
+/source/Ninject.Extensions.ChildKernel.5.0.ReSharper.user
+/source/Ninject.Extensions.ChildKernel.5.1.TeamCity.user
+/source/Ninject.Extensions.ChildKernel/_ReSharper.Ninject.Extensions.ChildKernel/*
+/source/Ninject.Extensions.ChildKernel/obj/*
+/source/Ninject.Extensions.ChildKernel.Test/obj/*
+/source/_ReSharper.Ninject.Extensions.ChildKernel/*
+/source/Ninject.Extensions.ChildKernel.Test/Ninject.Extensions.ChildKernel.Test.csproj.user
+/source/Ninject.Extensions.ChildKernel/Ninject.Extensions.ChildKernel.csproj.user
