@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.ChildKernel", "Ninject.Extensions.ChildKernel\Ninject.Extensions.ChildKernel.csproj", "{9831975F-FA35-4B8B-A545-1A06852625BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.ChildKernel.Test", "Ninject.Extensions.ChildKernel.Test\Ninject.Extensions.ChildKernel.Test.csproj", "{EB0A05EF-2630-4F8B-92D8-6763509C0D80}"
