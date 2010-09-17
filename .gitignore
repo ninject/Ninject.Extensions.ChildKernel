@@ -8,3 +8,5 @@
 /src/_ReSharper.Ninject.Extensions.ChildKernel/*
 /src/Ninject.Extensions.ChildKernel.Test/Ninject.Extensions.ChildKernel.Test.csproj.user
 /src/Ninject.Extensions.ChildKernel/Ninject.Extensions.ChildKernel.csproj.user
+/lib/Ninject/*.zip
+/lib/Ninject/*/**
