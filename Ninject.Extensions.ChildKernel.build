@@ -62,7 +62,7 @@
 		</csc>
 	</target>
 	
-    <target name="compile-silverlight-tests" depends="core" unless="${skip.tests}" if="${string::contains(build.platform, 'silverlight')}">
+    <target name="compile-silverlight-tests" depends="core" unless="${skip.tests or skip.silverlighttests}" if="${string::contains(build.platform, 'silverlight')}">
         <mkdir dir="${current.path.test}"/>
         <copy todir="${current.path.test}" flatten="true">
             <fileset basedir="${current.path.build}">
