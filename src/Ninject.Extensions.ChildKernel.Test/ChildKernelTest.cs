@@ -18,11 +18,21 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using MSTestAttributes;
     using Xunit;
+    using Xunit.Should;
+#endif
 
     /// <summary>
     /// Tests the implementation of <see cref="ChildKernel"/>.
     /// </summary>
+    [TestClass]
     public class ChildKernelTest
     {
         /// <summary>
@@ -48,17 +58,23 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// The object under test.
         /// </summary>
-        private readonly IKernel testee;
+        private IKernel testee;
 
         /// <summary>
         /// The parent kernel.
         /// </summary>
-        private readonly IKernel parentKernel;
+        private IKernel parentKernel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernelTest"/> class.
         /// </summary>
         public ChildKernelTest()
+        {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
         {
             this.parentKernel = new StandardKernel();
             this.testee = new ChildKernel(this.parentKernel);
@@ -67,7 +83,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// A test interface.
         /// </summary>
-        private interface IFoo
+        public interface IFoo
         {
             /// <summary>
             /// Gets the injected bar object.
@@ -85,7 +101,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// Another test interface
         /// </summary>
-        private interface IBar
+        public interface IBar
         {
             /// <summary>
             /// Gets the name of the instance.
@@ -107,8 +123,8 @@ namespace Ninject.Extensions.ChildKernel
 
             var foo = this.testee.Get<IFoo>();
 
-            Assert.Equal(ChildFooName, foo.Name);
-            Assert.Equal(ChildBarName, foo.Bar.Name);
+            foo.Name.ShouldBe(ChildFooName);
+            foo.Bar.Name.ShouldBe(ChildBarName);
         }
 
         /// <summary>
@@ -123,8 +139,8 @@ namespace Ninject.Extensions.ChildKernel
 
             var foo = this.testee.Get<IFoo>();
 
-            Assert.Equal(ChildFooName, foo.Name);
-            Assert.Equal(ParentBarName, foo.Bar.Name);
+            foo.Name.ShouldBe(ChildFooName);
+            foo.Bar.Name.ShouldBe(ParentBarName);
         }
 
         /// <summary>
@@ -143,7 +159,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// A test object.
         /// </summary>
-        private class Foo : IFoo
+        public class Foo : IFoo
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="Foo"/> class.
@@ -172,7 +188,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// Another test object
         /// </summary>
-        private class Bar : IBar
+        public class Bar : IBar
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="Bar"/> class.

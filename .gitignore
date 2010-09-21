@@ -10,3 +10,8 @@
 /src/Ninject.Extensions.ChildKernel/Ninject.Extensions.ChildKernel.csproj.user
 /lib/Ninject/*.zip
 /lib/Ninject/*/**
+/src/Ninject.Extensions.ChildKernel.SilverlightTests/Bin
+/src/Ninject.Extensions.ChildKernel.SilverlightTests/obj
+/**/*.user
+
+/src/Ninject.Extensions.ChildKernel.SilverlightTests/Ninject.Extensions.ChildKernel.SilverlightTests.csproj.user
