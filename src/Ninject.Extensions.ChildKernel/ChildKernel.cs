@@ -19,16 +19,17 @@
 namespace Ninject.Extensions.ChildKernel
 {
     using System.Collections.Generic;
-    using global::Ninject;
-    using global::Ninject.Activation;
-    using global::Ninject.Modules;
-    using global::Ninject.Syntax;
+    using Ninject;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Modules;
+    using Ninject.Syntax;
 
     /// <summary>
     /// This is a kernel with a parent kernel. Any binding that can not be resolved by this kernel is forwarded to the
     /// parent.
     /// </summary>
-    public class ChildKernel : StandardKernel
+    public class ChildKernel : StandardKernel, IChildKernel
     {
         /// <summary>
         /// The parent kernel.
@@ -43,9 +44,24 @@ namespace Ninject.Extensions.ChildKernel
         public ChildKernel(IResolutionRoot parent, params INinjectModule[] modules)
             : base(modules)
         {
-            this.parent = parent;            
+            this.parent = parent;
+            this.Components.RemoveAll<IActivationCache>();
+            this.Components.Add<IActivationCache, ChildActivationCache>();
         }
 
+
+        /// <summary>
+        /// Gets the parent resolution root.
+        /// </summary>
+        /// <value>The parent  resolution root.</value>
+        public IResolutionRoot ParentResolutionRoot
+        {
+            get
+            {
+                return this.parent;
+            }
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernel"/> class.
         /// </summary>

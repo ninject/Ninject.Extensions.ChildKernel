@@ -73,13 +73,6 @@ namespace Ninject.Extensions.ChildKernel
             this.SetUp();
         }
 
-        [TestInitialize]
-        public void SetUp()
-        {
-            this.parentKernel = new StandardKernel();
-            this.testee = new ChildKernel(this.parentKernel);
-        }
-        
         /// <summary>
         /// A test interface.
         /// </summary>
@@ -108,6 +101,22 @@ namespace Ninject.Extensions.ChildKernel
             /// </summary>
             /// <value>The name of the instance.</value>
             string Name { get; }
+
+            /// <summary>
+            /// Gets the number of activations.
+            /// </summary>
+            /// <value>The activation count.</value>
+            int ActivationCount { get; }
+        }
+
+        /// <summary>
+        /// Sets up all tests.
+        /// </summary>
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel(this.parentKernel);
         }
         
         /// <summary>
@@ -157,6 +166,20 @@ namespace Ninject.Extensions.ChildKernel
         }
 
         /// <summary>
+        /// Objects the that are activated on parent are not activated again by the child kernel.
+        /// </summary>
+        [Fact]
+        public void ObjectsThatAreActivatedOnParentAreNotActivatedAgain()
+        {
+            this.parentKernel.Bind<Bar>().ToSelf().WithConstructorArgument("name", ParentBarName);
+            this.testee.Bind<IBar>().ToMethod(ctx => ctx.Kernel.Get<Bar>());
+
+            var bar = this.testee.Get<IBar>();
+
+            bar.ActivationCount.ShouldBe(1);
+        }
+
+        /// <summary>
         /// A test object.
         /// </summary>
         public class Foo : IFoo
@@ -188,7 +211,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// Another test object
         /// </summary>
-        public class Bar : IBar
+        public class Bar : IBar, IInitializable
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="Bar"/> class.
@@ -197,13 +220,28 @@ namespace Ninject.Extensions.ChildKernel
             public Bar(string name)
             {
                 this.Name = name;
+                this.ActivationCount = 0;
             }
+
+            /// <summary>
+            /// Gets the number of activations.
+            /// </summary>
+            /// <value>The activation count.</value>
+            public int ActivationCount { get; private set; }
 
             /// <summary>
             /// Gets the name of the instance.
             /// </summary>
             /// <value>The name of the instance.</value>
             public string Name { get; private set; }
+
+            /// <summary>
+            /// Initializes the instance. Called during activation.
+            /// </summary>
+            public void Initialize()
+            {
+                this.ActivationCount++;
+            }
         }
     }
 }
