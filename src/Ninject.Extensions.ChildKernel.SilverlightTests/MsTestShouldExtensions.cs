@@ -1,11 +1,11 @@
-﻿namespace UnitDriven.Should
+﻿#if SILVERLIGHT_MSTEST
+namespace MsTest.Should
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
-    using UnitDriven;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public static class ShouldExtensions
     {
@@ -177,22 +177,22 @@
 
         public static void ShouldBeInstanceOf<T>(this object self)
         {
-            Assert.IsInstanceOfType(typeof(T), self);
+            Assert.IsInstanceOfType(self, typeof(T));
         }
 
         public static void ShouldBeInstanceOf(this object self, Type type)
         {
-            Assert.IsInstanceOfType(type, self);
+            Assert.IsInstanceOfType(self, type);
         }
 
         public static void ShouldNotBeInstanceOf<T>(this object self)
         {
-            Assert.IsNotInstanceOfType(typeof(T), self);
+            Assert.IsNotInstanceOfType(self, typeof(T));
         }
 
         public static void ShouldNotBeInstanceOf(this object self, Type type)
         {
-            Assert.IsNotInstanceOfType(type, self);
+            Assert.IsNotInstanceOfType(self, type);
         }
 
         /*
@@ -237,3 +237,4 @@
         }
     }
 }
+#endif

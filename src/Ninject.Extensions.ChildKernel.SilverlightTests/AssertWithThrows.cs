@@ -2,7 +2,11 @@
 {
     using System;
     using System.Globalization;
+#if SILVERLIGHT_MSTEST
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
     using Assert = UnitDriven.Assert;
+#endif
 
     public class AssertWithThrows
     {

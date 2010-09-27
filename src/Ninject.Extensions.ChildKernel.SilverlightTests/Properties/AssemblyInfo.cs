@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿// Copyright © Microsoft 2010
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +10,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Ninject.Extensions.ChildKernel.SilverlightTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Ninject.Extensions.ChildKernel.SilverlightTests")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("dc23bd7d-9159-43c7-96a6-0ffbae4f19dc")]
+[assembly: Guid("192e9ff8-11d0-45ee-b9b3-83713ce64107")]
 
 // Version information for an assembly consists of the following four values:
 //
