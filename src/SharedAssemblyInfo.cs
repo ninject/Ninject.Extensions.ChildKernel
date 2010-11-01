@@ -12,10 +12,10 @@ using System.Runtime.InteropServices;
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: AssemblyProductAttribute("Ninject.Extensions.ChildKernel: Named Scope Extension for Ninject")]
+[assembly: AssemblyProductAttribute("Ninject.Extensions.ChildKernel: Child kernel extension for Ninject")]
 [assembly: AssemblyCompanyAttribute("bbv Software Services AG")]
-[assembly: AssemblyCopyrightAttribute("Copyright © 2009-2010 bbv Software Services AG")]
-[assembly: AssemblyVersionAttribute("1.0.0.0")]
+[assembly: AssemblyCopyrightAttribute("Copyright © 2009-2010 bbv Software Services AG and contributors")]
+[assembly: AssemblyVersionAttribute("2.1.0.13")]
 [assembly: ComVisibleAttribute(false)]
 [assembly: CLSCompliantAttribute(true)]
 

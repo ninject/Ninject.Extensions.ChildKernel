@@ -1,6 +1,7 @@
 //-------------------------------------------------------------------------------
 // <copyright file="ChildKernelTest.cs" company="bbv Software Services AG">
-//   Copyright (c) 2008 bbv Software Services AG
+//   Copyright (c) 2010 Software Services AG
+//   Remo Gloor (remo.gloor@gmail.com)
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -22,12 +23,12 @@ namespace Ninject.Extensions.ChildKernel
 #if SILVERLIGHT_MSTEST
     using MsTest.Should;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Assert = AssertWithThrows;
     using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
 #else
     using UnitDriven;
     using UnitDriven.Should;
-    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Assert = AssertWithThrows;
     using Fact = UnitDriven.TestMethodAttribute;
 #endif
 #else

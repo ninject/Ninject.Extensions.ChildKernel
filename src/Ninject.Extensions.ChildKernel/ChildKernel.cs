@@ -1,6 +1,7 @@
 //-------------------------------------------------------------------------------
 // <copyright file="ChildKernel.cs" company="bbv Software Services AG">
-//   Copyright (c) 2008 bbv Software Services AG
+//   Copyright (c) 2010 Software Services AG
+//   Remo Gloor (remo.gloor@gmail.com)
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -48,19 +49,6 @@ namespace Ninject.Extensions.ChildKernel
             this.Components.RemoveAll<IActivationCache>();
             this.Components.Add<IActivationCache, ChildActivationCache>();
         }
-
-
-        /// <summary>
-        /// Gets the parent resolution root.
-        /// </summary>
-        /// <value>The parent  resolution root.</value>
-        public IResolutionRoot ParentResolutionRoot
-        {
-            get
-            {
-                return this.parent;
-            }
-        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernel"/> class.
@@ -74,6 +62,18 @@ namespace Ninject.Extensions.ChildKernel
             this.parent = parent;
         }
 
+        /// <summary>
+        /// Gets the parent resolution root.
+        /// </summary>
+        /// <value>The parent  resolution root.</value>
+        public IResolutionRoot ParentResolutionRoot
+        {
+            get
+            {
+                return this.parent;
+            }
+        }
+        
         /// <summary>
         /// Determines whether the specified request can be resolved.
         /// </summary>
