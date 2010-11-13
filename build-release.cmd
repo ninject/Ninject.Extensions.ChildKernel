@@ -24,4 +24,6 @@ echo "BUILD FAILED"
 echo "============================================================"
 
 :End
+if defined NoPause goto ENDBATCHFILE 
 pause
+:ENDBATCHFILE
