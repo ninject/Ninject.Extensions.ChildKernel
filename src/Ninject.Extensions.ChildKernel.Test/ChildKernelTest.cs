@@ -19,28 +19,12 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Extensions.ChildKernel.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     /// <summary>
     /// Tests the implementation of <see cref="ChildKernel"/>.
     /// </summary>
-    [TestClass]
     public class ChildKernelTest
     {
         /// <summary>
@@ -66,19 +50,20 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// The object under test.
         /// </summary>
-        private IKernel testee;
+        private readonly IKernel testee;
 
         /// <summary>
         /// The parent kernel.
         /// </summary>
-        private IKernel parentKernel;
+        private readonly IKernel parentKernel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernelTest"/> class.
         /// </summary>
         public ChildKernelTest()
         {
-            this.SetUp();
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel(this.parentKernel);
         }
 
         /// <summary>
@@ -115,16 +100,6 @@ namespace Ninject.Extensions.ChildKernel
             /// </summary>
             /// <value>The activation count.</value>
             int ActivationCount { get; }
-        }
-
-        /// <summary>
-        /// Sets up all tests.
-        /// </summary>
-        [TestInitialize]
-        public void SetUp()
-        {
-            this.parentKernel = new StandardKernel();
-            this.testee = new ChildKernel(this.parentKernel);
         }
         
         /// <summary>

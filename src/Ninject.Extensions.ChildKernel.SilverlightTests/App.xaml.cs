@@ -20,10 +20,9 @@
 namespace Ninject.Extensions.ChildKernel
 {
     using System;
+    using System.Reflection;
     using System.Windows;
-#if SILVERLIGHT_MSTEST
-    using Microsoft.Silverlight.Testing;
-#endif
+
 
     /// <summary>
     /// The main class of the unittests.
@@ -68,9 +67,7 @@ namespace Ninject.Extensions.ChildKernel
         /// <param name="e">The <see cref="System.Windows.StartupEventArgs"/> instance containing the event data.</param>
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-#if SILVERLIGHT_MSTEST
-            RootVisual = UnitTestSystem.CreateTestPage();
-#endif
+            RootVisual = new Xunit.Runner.Silverlight.TestEngine(Assembly.GetExecutingAssembly());
         }
 
         /// <summary>
