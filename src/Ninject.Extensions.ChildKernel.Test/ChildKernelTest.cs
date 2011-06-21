@@ -19,9 +19,10 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
-    using Xunit;
-    using Xunit.Should;
+    using FluentAssertions;
 
+    using Xunit;
+    
     /// <summary>
     /// Tests the implementation of <see cref="ChildKernel"/>.
     /// </summary>
@@ -115,8 +116,8 @@ namespace Ninject.Extensions.ChildKernel
 
             var foo = this.testee.Get<IFoo>();
 
-            foo.Name.ShouldBe(ChildFooName);
-            foo.Bar.Name.ShouldBe(ChildBarName);
+            foo.Name.Should().Be(ChildFooName);
+            foo.Bar.Name.Should().Be(ChildBarName);
         }
 
         /// <summary>
@@ -131,8 +132,8 @@ namespace Ninject.Extensions.ChildKernel
 
             var foo = this.testee.Get<IFoo>();
 
-            foo.Name.ShouldBe(ChildFooName);
-            foo.Bar.Name.ShouldBe(ParentBarName);
+            foo.Name.Should().Be(ChildFooName);
+            foo.Bar.Name.Should().Be(ParentBarName);
         }
 
         /// <summary>
@@ -159,7 +160,7 @@ namespace Ninject.Extensions.ChildKernel
 
             var bar = this.testee.Get<IBar>();
 
-            bar.ActivationCount.ShouldBe(1);
+            bar.ActivationCount.Should().Be(1);
         }
 
         /// <summary>
