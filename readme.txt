@@ -29,10 +29,10 @@ var parentKernel = new StandardKernel();
 parentKernel.Bind<Bar>().ToSelf().InSingletonScope();
 
 var childKernel1 = new ChildKernel(this.parentKernel);
-childKernel1.Bind<IFoo>().ToSelf().InSingletonScope();
+childKernel1.Bind<Foo>().ToSelf().InSingletonScope();
 
 var childKernel1 = new ChildKernel(this.parentKernel);
-childKernel2.Bind<IFoo>().ToSelf().InSingletonScope();
+childKernel2.Bind<Foo>().ToSelf().InSingletonScope();
 
 var foo1 = childKernel1.Get<Foo>();
 var foo2 = childKernel2.Get<Foo>();
