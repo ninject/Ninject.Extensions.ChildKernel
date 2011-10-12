@@ -21,6 +21,8 @@ namespace Ninject.Extensions.ChildKernel
 {
     using FluentAssertions;
 
+    using Ninject.Parameters;
+
     using Xunit;
     
     /// <summary>
@@ -67,42 +69,6 @@ namespace Ninject.Extensions.ChildKernel
             this.testee = new ChildKernel(this.parentKernel);
         }
 
-        /// <summary>
-        /// A test interface.
-        /// </summary>
-        public interface IFoo
-        {
-            /// <summary>
-            /// Gets the injected bar object.
-            /// </summary>
-            /// <value>The injected bar object.</value>
-            IBar Bar { get; }
-
-            /// <summary>
-            /// Gets the name of the instance.
-            /// </summary>
-            /// <value>The name of the instance.</value>
-            string Name { get; }
-        }
-
-        /// <summary>
-        /// Another test interface
-        /// </summary>
-        public interface IBar
-        {
-            /// <summary>
-            /// Gets the name of the instance.
-            /// </summary>
-            /// <value>The name of the instance.</value>
-            string Name { get; }
-
-            /// <summary>
-            /// Gets the number of activations.
-            /// </summary>
-            /// <value>The activation count.</value>
-            int ActivationCount { get; }
-        }
-        
         /// <summary>
         /// All known dependencies the are resolved on child kernel.
         /// </summary>
@@ -163,69 +129,27 @@ namespace Ninject.Extensions.ChildKernel
             bar.ActivationCount.Should().Be(1);
         }
 
-        /// <summary>
-        /// A test object.
-        /// </summary>
-        public class Foo : IFoo
+        [Fact]
+        public void ImplicitBindingsAreResolvedOnChildKernel()
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Foo"/> class.
-            /// </summary>
-            /// <param name="bar">The injected bar object.</param>
-            /// <param name="name">The name of the instance.</param>
-            public Foo(IBar bar, string name)
-            {
-                this.Bar = bar;
-                this.Name = name;
-            }
+            this.parentKernel.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ParentBarName);
+            this.testee.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ChildBarName);
 
-            /// <summary>
-            /// Gets the injected bar object.
-            /// </summary>
-            /// <value>The injected bar object.</value>
-            public IBar Bar { get; private set; }
+            var foo = this.testee.Get<Foo>(new ConstructorArgument("name", string.Empty));
 
-            /// <summary>
-            /// Gets the name of the instance.
-            /// </summary>
-            /// <value>The name of the instance.</value>
-            public string Name { get; private set; }
+            foo.Bar.Name.Should().Be(ChildBarName);
         }
-
-        /// <summary>
-        /// Another test object
-        /// </summary>
-        public class Bar : IBar, IInitializable
+    
+        [Fact]
+        public void ImplicitBindingsAreResolvedOnChildKernelEvenIfImplicitBindingExistsOnParent()
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Bar"/> class.
-            /// </summary>
-            /// <param name="name">The name of the instance.</param>
-            public Bar(string name)
-            {
-                this.Name = name;
-                this.ActivationCount = 0;
-            }
+            this.parentKernel.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ParentBarName);
+            this.testee.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ChildBarName);
 
-            /// <summary>
-            /// Gets the number of activations.
-            /// </summary>
-            /// <value>The activation count.</value>
-            public int ActivationCount { get; private set; }
+            this.parentKernel.Get<Foo>(new ConstructorArgument("name", string.Empty));
+            var foo = this.testee.Get<Foo>(new ConstructorArgument("name", string.Empty));
 
-            /// <summary>
-            /// Gets the name of the instance.
-            /// </summary>
-            /// <value>The name of the instance.</value>
-            public string Name { get; private set; }
-
-            /// <summary>
-            /// Initializes the instance. Called during activation.
-            /// </summary>
-            public void Initialize()
-            {
-                this.ActivationCount++;
-            }
+            foo.Bar.Name.Should().Be(ChildBarName);
         }
     }
 }

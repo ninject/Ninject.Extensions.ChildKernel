@@ -83,7 +83,20 @@ namespace Ninject.Extensions.ChildKernel
         /// </returns>
         public override bool CanResolve(IRequest request)
         {
-            return base.CanResolve(request) || this.parent.CanResolve(request);
+            return base.CanResolve(request) || this.parent.CanResolve(request, true);
+        }
+
+        /// <summary>
+        /// Determines whether the specified request can be resolved.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <returns>
+        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool CanResolve(IRequest request, bool ignoreImplicitBindings)
+        {
+            return base.CanResolve(request, ignoreImplicitBindings) || this.parent.CanResolve(request, true);
         }
 
         /// <summary>
@@ -96,7 +109,17 @@ namespace Ninject.Extensions.ChildKernel
         /// </returns>
         public override IEnumerable<object> Resolve(IRequest request)
         {
-            return base.CanResolve(request) ? base.Resolve(request) : this.parent.Resolve(request);
+            if (base.CanResolve(request))
+            {
+                return base.Resolve(request);
+            }
+
+            if (this.parent.CanResolve(request, true))
+            {
+                return this.parent.Resolve(request);
+            }
+
+            return base.Resolve(request);
         }
     }
 }
