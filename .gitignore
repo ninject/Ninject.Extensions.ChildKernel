@@ -1,5 +1,7 @@
 /build/*
 /dist/*
+*.dotCover
+_ReSharper.Ninject.Extensions.ChildKernel with Silverlight and WP7 Unittesting
 /src/Ninject.Extensions.ChildKernel.5.0.ReSharper.user
 /src/Ninject.Extensions.ChildKernel.5.1.TeamCity.user
 /src/Ninject.Extensions.ChildKernel/_ReSharper.Ninject.Extensions.ChildKernel/*
