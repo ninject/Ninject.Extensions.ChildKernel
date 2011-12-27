@@ -32,3 +32,5 @@ using System.Security;
 #if !NO_PARTIAL_TRUST
 [assembly: AllowPartiallyTrustedCallers]
 #endif
+[assembly: AssemblyDescriptionAttribute("Ninject extension that allows that child kernels can be defined.")]
+
