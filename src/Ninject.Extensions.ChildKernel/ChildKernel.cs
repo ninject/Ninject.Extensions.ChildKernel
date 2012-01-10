@@ -19,6 +19,7 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
+    using System;
     using System.Collections.Generic;
     using Ninject;
     using Ninject.Activation;
@@ -119,7 +120,22 @@ namespace Ninject.Extensions.ChildKernel
                 return this.parent.Resolve(request);
             }
 
-            return base.Resolve(request);
+            try
+            {
+                return base.Resolve(request);
+            }
+            catch (ActivationException)
+            {
+                try
+                {
+                    return this.parent.Resolve(request);
+                }
+                catch (ActivationException)
+                {
+                }
+
+                throw;
+            }
         }
     }
 }

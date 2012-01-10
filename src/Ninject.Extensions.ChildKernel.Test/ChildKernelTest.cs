@@ -19,9 +19,19 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     using FluentAssertions;
 
+    using Ninject.Activation;
+    using Ninject.Activation.Providers;
+    using Ninject.Components;
+    using Ninject.Infrastructure;
     using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Planning.Bindings.Resolvers;
 
     using Xunit;
     
@@ -150,6 +160,39 @@ namespace Ninject.Extensions.ChildKernel
             var foo = this.testee.Get<Foo>(new ConstructorArgument("name", string.Empty));
 
             foo.Bar.Name.Should().Be(ChildBarName);
+        }
+    
+        [Fact]
+        public void ImplicitBindingsFallbackToParentIncaseTheChildCantResolve()
+        {
+            this.parentKernel.Components.Add<IMissingBindingResolver, BarMissingBindingResolver>();
+
+            var bar = this.testee.Get<IBar>();
+
+            bar.Name.Should().Be("parent");
+        }
+
+        public class BarMissingBindingResolver : NinjectComponent, IMissingBindingResolver
+        {
+            private readonly IKernel kernel;
+
+            public BarMissingBindingResolver(IKernel kernel)
+            {
+                this.kernel = kernel;
+            }
+
+            public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+            {
+                if (request.Service == typeof(IBar))
+                {
+                    var binding = new Binding(request.Service);
+                    var builder = new BindingBuilder<IBar>(binding, this.kernel, string.Empty);
+                    builder.To<Bar>().WithConstructorArgument("name", "parent");
+                    return new[] { binding };
+                }
+
+                return Enumerable.Empty<IBinding>();
+            }
         }
     }
 }
