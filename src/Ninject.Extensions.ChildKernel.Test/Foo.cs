@@ -6,6 +6,15 @@ namespace Ninject.Extensions.ChildKernel
     public class Foo : IFoo
     {
         /// <summary>
+        /// Initializes a new instance the <see cref="Foo"/> class without a bar
+        /// </summary>
+        /// <param name="name"></param>
+        public Foo(string name)
+        {
+            this.Name = name;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Foo"/> class.
         /// </summary>
         /// <param name="bar">The injected bar object.</param>
@@ -15,6 +24,8 @@ namespace Ninject.Extensions.ChildKernel
             this.Bar = bar;
             this.Name = name;
         }
+
+ 
 
         /// <summary>
         /// Gets the injected bar object.
