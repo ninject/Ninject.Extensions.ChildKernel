@@ -17,6 +17,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using Ninject.Selection.Heuristics;
+
 namespace Ninject.Extensions.ChildKernel
 {
     using System;
@@ -49,6 +51,9 @@ namespace Ninject.Extensions.ChildKernel
             this.parent = parent;
             this.Components.RemoveAll<IActivationCache>();
             this.Components.Add<IActivationCache, ChildActivationCache>();
+
+            this.Components.RemoveAll<IConstructorScorer>();
+            this.Components.Add<IConstructorScorer, StandardConstructorScorerForChildKernel>();
         }
         
         /// <summary>

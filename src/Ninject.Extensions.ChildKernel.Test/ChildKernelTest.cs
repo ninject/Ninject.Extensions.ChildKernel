@@ -172,6 +172,17 @@ namespace Ninject.Extensions.ChildKernel
             bar.Name.Should().Be("parent");
         }
 
+        [Fact]
+        public void SelectCorrectConstructorWhenBindingsAcrossKernels()
+        {
+            this.parentKernel.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ParentBarName);
+
+            var foo = this.testee.Get<Foo>(new ConstructorArgument("name", string.Empty));
+
+            foo.Bar.Should().NotBeNull();
+
+        }
+
         public class BarMissingBindingResolver : NinjectComponent, IMissingBindingResolver
         {
             private readonly IKernel kernel;
