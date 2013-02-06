@@ -26,7 +26,6 @@ namespace Ninject.Extensions.ChildKernel
     using FluentAssertions;
 
     using Ninject.Activation;
-    using Ninject.Activation.Providers;
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
@@ -170,6 +169,16 @@ namespace Ninject.Extensions.ChildKernel
             var bar = this.testee.Get<IBar>();
 
             bar.Name.Should().Be("parent");
+        }
+
+        [Fact]
+        public void SelectCorrectConstructorWhenBindingsAcrossKernels()
+        {
+            this.parentKernel.Bind<IBar>().To<Bar>().WithConstructorArgument("name", ParentBarName);
+
+            var baz = this.testee.Get<Baz>();
+
+            baz.Bar.Should().NotBeNull();
         }
 
         public class BarMissingBindingResolver : NinjectComponent, IMissingBindingResolver

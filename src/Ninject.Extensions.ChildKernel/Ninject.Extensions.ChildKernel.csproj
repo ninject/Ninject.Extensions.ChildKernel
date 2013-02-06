@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="ChildActivationCache.cs" />
     <Compile Include="ChildKernel.cs" />
+    <Compile Include="ChildKernelConstructorScorer.cs" />
     <Compile Include="IChildKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

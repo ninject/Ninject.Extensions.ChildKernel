@@ -25,6 +25,7 @@ namespace Ninject.Extensions.ChildKernel
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Modules;
+    using Ninject.Selection.Heuristics;
     using Ninject.Syntax;
 
     /// <summary>
@@ -47,8 +48,12 @@ namespace Ninject.Extensions.ChildKernel
             : base(modules)
         {
             this.parent = parent;
+            
             this.Components.RemoveAll<IActivationCache>();
-            this.Components.Add<IActivationCache, ChildActivationCache>();
+            this.Components.Add<IActivationCache, ChildActivationCache>(); 
+          
+            this.Components.RemoveAll<IConstructorScorer>();
+            this.Components.Add<IConstructorScorer, ChildKernelConstructorScorer>();
         }
         
         /// <summary>
