@@ -647,9 +647,7 @@
 		</if>
 		<if test="${not(nuget.apiKey == '') and nuget.publish}">
 			<echo message="Publish to nuget.org" />
-		    <!-- Publish is temporary disabled to add functionallity to build branches and pull requests without publishing
 			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" failonerror="false"/>
-			-->
 		</if>
 	</target>
 	
