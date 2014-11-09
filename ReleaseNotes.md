@@ -4,5 +4,5 @@ Version 3.2.0
 
 Version 3.0.0.0
 ---------------
-Removed: No web builds. All builds are have not reference to web anymore
-Changed: Implicit bindngs are resolved on the child kernel and not the parent kernel anymore
+- Removed: No web builds. All builds are have not reference to web anymore
+- Changed: Implicit bindngs are resolved on the child kernel and not the parent kernel anymore
