@@ -33,6 +33,7 @@ var foo1 = childKernel1.Get<Foo>();
 var foo2 = childKernel2.Get<Foo>();
 var foo3 = childKernel1.Get<Foo>();
 ```
+
 In this example `foo1` and `foo2` will be different instances. 
 `foo1` and `foo3` are the same instance. 
 And all share the same `bar`.
