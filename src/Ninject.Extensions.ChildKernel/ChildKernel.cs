@@ -19,43 +19,44 @@
 
 namespace Ninject.Extensions.ChildKernel
 {
-    using System;
     using System.Collections.Generic;
     using Ninject;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
+    using Ninject.Activation.Strategies;
+    using Ninject.Components;
+    using Ninject.Injection;
     using Ninject.Modules;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings.Resolvers;
+    using Ninject.Planning.Strategies;
+    using Ninject.Selection;
     using Ninject.Selection.Heuristics;
     using Ninject.Syntax;
+    using System;
 
     /// <summary>
     /// This is a kernel with a parent kernel. Any binding that can not be resolved by this kernel is forwarded to the
     /// parent.
     /// </summary>
-    public class ChildKernel : StandardKernel, IChildKernel
+    public class ChildKernel : KernelBase, IChildKernel
     {
-        /// <summary>
-        /// The parent kernel.
-        /// </summary>
-        private readonly IResolutionRoot parent;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernel"/> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="modules">The modules.</param>
         public ChildKernel(IResolutionRoot parent, params INinjectModule[] modules)
-            : base(modules)
+            : base(CreateComponentContainerOfStandartKernel(), new NinjectSettings(), modules)
         {
-            this.parent = parent;
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
             
-            this.Components.RemoveAll<IActivationCache>();
-            this.Components.Add<IActivationCache, ChildActivationCache>(); 
-          
-            this.Components.RemoveAll<IConstructorScorer>();
-            this.Components.Add<IConstructorScorer, ChildKernelConstructorScorer>();
+            ParentResolutionRoot = parent;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ChildKernel"/> class.
         /// </summary>
@@ -63,23 +64,60 @@ namespace Ninject.Extensions.ChildKernel
         /// <param name="settings">The settings.</param>
         /// <param name="modules">The modules.</param>
         public ChildKernel(IResolutionRoot parent, INinjectSettings settings, params INinjectModule[] modules)
-            : base(settings, modules)
+            : base(CreateComponentContainerOfStandartKernel(settings), settings, modules)
         {
-            this.parent = parent;
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+            
+            ParentResolutionRoot = parent;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernel"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="settings">The settings.</param>
+        /// <param name="components">The components.</param>
+        /// <param name="modules">The modules.</param>
+        public ChildKernel(
+            IResolutionRoot parent,
+            INinjectSettings settings,
+            IComponentContainer components,
+            params INinjectModule[] modules)
+            : base(new ChildKernelComponentContainer(components), settings, modules)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+            
+            ParentResolutionRoot = parent;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernel"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="modules">The modules.</param>
+        public ChildKernel(IKernel parent, params INinjectModule[] modules)
+            : base(new ChildKernelComponentContainer(parent.Components), parent.Settings, modules)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+            
+            ParentResolutionRoot = parent;
         }
 
         /// <summary>
         /// Gets the parent resolution root.
         /// </summary>
         /// <value>The parent  resolution root.</value>
-        public IResolutionRoot ParentResolutionRoot
-        {
-            get
-            {
-                return this.parent;
-            }
-        }
-        
+        public IResolutionRoot ParentResolutionRoot { get; }
+
         /// <summary>
         /// Determines whether the specified request can be resolved.
         /// </summary>
@@ -89,7 +127,7 @@ namespace Ninject.Extensions.ChildKernel
         /// </returns>
         public override bool CanResolve(IRequest request)
         {
-            return base.CanResolve(request) || this.parent.CanResolve(request, true);
+            return base.CanResolve(request) || this.ParentResolutionRoot.CanResolve(request, true);
         }
 
         /// <summary>
@@ -102,7 +140,7 @@ namespace Ninject.Extensions.ChildKernel
         /// </returns>
         public override bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            return base.CanResolve(request, ignoreImplicitBindings) || this.parent.CanResolve(request, true);
+            return base.CanResolve(request, ignoreImplicitBindings) || this.ParentResolutionRoot.CanResolve(request, true);
         }
 
         /// <summary>
@@ -120,9 +158,9 @@ namespace Ninject.Extensions.ChildKernel
                 return base.Resolve(request);
             }
 
-            if (this.parent.CanResolve(request, true))
+            if (this.ParentResolutionRoot.CanResolve(request, true))
             {
-                return this.parent.Resolve(request);
+                return this.ParentResolutionRoot.Resolve(request);
             }
 
             try
@@ -133,7 +171,7 @@ namespace Ninject.Extensions.ChildKernel
             {
                 try
                 {
-                    return this.parent.Resolve(request);
+                    return this.ParentResolutionRoot.Resolve(request);
                 }
                 catch (ActivationException)
                 {
@@ -141,6 +179,61 @@ namespace Ninject.Extensions.ChildKernel
 
                 throw;
             }
+        }
+
+        protected override void AddComponents()
+        {
+        }
+
+        protected override IKernel KernelInstance => this;
+
+        /// <summary>
+        /// Create container with components of <see cref="StandardKernel"/>
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        private static IComponentContainer CreateComponentContainerOfStandartKernel(INinjectSettings settings = null)
+        {
+            var container = new ChildKernelComponentContainer();
+
+            container.Add<IPlanner, Planner>();
+            container.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
+            container.Add<IPlanningStrategy, PropertyReflectionStrategy>();
+            container.Add<IPlanningStrategy, MethodReflectionStrategy>();
+            container.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
+            container.Add<IPipeline, Pipeline>();
+
+            if (settings != null && !settings.ActivationCacheDisabled)
+            {
+                container.Add<IActivationStrategy, ActivationCacheStrategy>();
+            }
+
+            container.Add<IActivationStrategy, PropertyInjectionStrategy>();
+            container.Add<IActivationStrategy, MethodInjectionStrategy>();
+            container.Add<IActivationStrategy, InitializableStrategy>();
+            container.Add<IActivationStrategy, StartableStrategy>();
+            container.Add<IActivationStrategy, BindingActionStrategy>();
+            container.Add<IActivationStrategy, DisposableStrategy>();
+            container.Add<IBindingResolver, StandardBindingResolver>();
+            container.Add<IBindingResolver, OpenGenericBindingResolver>();
+            container.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
+            container.Add<IMissingBindingResolver, SelfBindingResolver>();
+
+            if (settings != null && !settings.UseReflectionBasedInjection)
+            {
+                container.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
+            }
+            else
+            {
+                container.Add<IInjectorFactory, ReflectionInjectorFactory>();
+            }
+
+            container.Add<ICache, Cache>();
+            container.Add<ICachePruner, GarbageCollectionCachePruner>();
+            container.Add<IModuleLoader, ModuleLoader>();
+            container.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
+            container.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
+
+            return container;
         }
     }
 }

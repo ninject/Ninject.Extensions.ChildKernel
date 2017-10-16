@@ -21,6 +21,7 @@ namespace Ninject.Extensions.ChildKernel
 {
     using Ninject.Activation.Caching;
     using Ninject.Components;
+    using System;
 
     /// <summary>
     /// The activation cache of child kernels.
@@ -38,6 +39,11 @@ namespace Ninject.Extensions.ChildKernel
         /// <param name="kernel">The kernel.</param>
         public ChildActivationCache(IKernel kernel)
         {
+            if (kernel == null)
+            {
+                throw new ArgumentNullException(nameof(kernel));
+            }
+            
             this.parentCache = ((IChildKernel)kernel).ParentResolutionRoot.Get<IKernel>().Components.Get<IActivationCache>();
         }
 

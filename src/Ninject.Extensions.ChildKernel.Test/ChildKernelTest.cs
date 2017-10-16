@@ -31,13 +31,66 @@ namespace Ninject.Extensions.ChildKernel
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;
     using Ninject.Planning.Bindings.Resolvers;
+    using Ninject.Selection;
+    using Ninject.Syntax;
 
     using Xunit;
-    
+
+    public class ChildKernelTestWithIResolutionRoot : BaseChildKernelTest
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernelTestWithIResolutionRoot"/> class.
+        /// </summary>
+        public ChildKernelTestWithIResolutionRoot()
+        {
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel((IResolutionRoot)this.parentKernel);
+        }
+    }
+
+    public class ChildKernelTestWithParentAndSettings : BaseChildKernelTest
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernelTestWithParentAndSettings"/> class.
+        /// </summary>
+        public ChildKernelTestWithParentAndSettings()
+        {
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel(this.parentKernel, this.parentKernel.Settings);
+        }
+    }
+
+    public class ChildKernelTestWithComponents : BaseChildKernelTest
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernelTestWithComponents"/> class.
+        /// </summary>
+        public ChildKernelTestWithComponents()
+        {
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel(
+                this.parentKernel,
+                this.parentKernel.Settings,
+                this.parentKernel.Components);
+        }
+    }
+
+    public class ChildKernelTestWithOnlyKernel : BaseChildKernelTest
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChildKernelTestWithOnlyKernel"/> class.
+        /// </summary>
+        public ChildKernelTestWithOnlyKernel()
+        {
+            this.parentKernel = new StandardKernel();
+            this.testee = new ChildKernel(this.parentKernel);
+        }
+    }
+
     /// <summary>
     /// Tests the implementation of <see cref="ChildKernel"/>.
     /// </summary>
-    public class ChildKernelTest
+    public abstract class BaseChildKernelTest
     {
         /// <summary>
         /// Name parent's foo.
@@ -62,21 +115,12 @@ namespace Ninject.Extensions.ChildKernel
         /// <summary>
         /// The object under test.
         /// </summary>
-        private readonly IKernel testee;
+        protected IKernel testee;
 
         /// <summary>
         /// The parent kernel.
         /// </summary>
-        private readonly IKernel parentKernel;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChildKernelTest"/> class.
-        /// </summary>
-        public ChildKernelTest()
-        {
-            this.parentKernel = new StandardKernel();
-            this.testee = new ChildKernel(this.parentKernel);
-        }
+        protected IKernel parentKernel;
 
         /// <summary>
         /// All known dependencies the are resolved on child kernel.
@@ -179,6 +223,47 @@ namespace Ninject.Extensions.ChildKernel
             var baz = this.testee.Get<Baz>();
 
             baz.Bar.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ChildKernelCannotAccessParentKernelComponents()
+        {
+			this.testee.Components.Add<IMissingBindingResolver, BarMissingBindingResolver>();
+
+            var nameOfBarMissingBindingResolver = nameof(BarMissingBindingResolver);
+
+            this.parentKernel.Components
+                .GetAll<IMissingBindingResolver>()
+                .Select(i => i.GetType().Name)
+                .FirstOrDefault(i => i.Equals(nameOfBarMissingBindingResolver, StringComparison.InvariantCultureIgnoreCase))
+                .Should().BeNull();
+        }
+
+        [Fact]
+        public void DisposeOfChildKernelDoesNotChangeParentKernelComponents()
+        {
+            this.parentKernel.Components.Add<IMissingBindingResolver, BarMissingBindingResolver>();
+            this.testee.Dispose();
+
+            this.parentKernel.Components.Get<IMissingBindingResolver>().Should().NotBeNull();  
+        }
+
+        [Fact]
+        public void AddImmutableComponent()
+        {
+            Assert.Throws<InvalidOperationException>(() => this.testee.Components.Add<ISelector, Selector>());
+        }
+
+        [Fact]
+        public void RemoveImmutableComponent()
+        {
+            Assert.Throws<InvalidOperationException>(() => this.testee.Components.Remove<ISelector, Selector>());
+        }
+
+        [Fact]
+        public void RemoveAllImmutableComponents()
+        {
+            Assert.Throws<InvalidOperationException>(() => this.testee.Components.RemoveAll(typeof(ISelector)));
         }
 
         public class BarMissingBindingResolver : NinjectComponent, IMissingBindingResolver
