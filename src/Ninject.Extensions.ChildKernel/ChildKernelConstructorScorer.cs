@@ -1,13 +1,15 @@
-﻿//-------------------------------------------------------------------------------
-// <copyright file="ChildKernelConstructorScorer.cs" company="bbv Software Services AG">
-//   Copyright (c) 2013 Software Services AG
-//   Remo Gloor (remo.gloor@gmail.com)
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="ChildKernelConstructorScorer.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2010-2011 bbv Software Services AG.
+//   Copyright (c) 2011-2017 Ninject Project Contributors. All rights reserved.
 //
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   You may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
 //
 //       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
 //   Unless required by applicable law or agreed to in writing, software
 //   distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +17,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Extensions.ChildKernel
 {
@@ -50,11 +52,9 @@ namespace Ninject.Extensions.ChildKernel
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         private bool BindingExistsOnParentKernel(IKernel kernel, IContext context, ITarget target)
         {
-            var childKernel = kernel as IChildKernel;
-            if (childKernel != null)
+            if (kernel is IChildKernel childKernel)
             {
-                var parentKernel = childKernel.ParentResolutionRoot as IKernel;
-                return parentKernel != null && this.BindingExists(parentKernel, context, target);
+                return childKernel.ParentResolutionRoot is IKernel parentKernel && this.BindingExists(parentKernel, context, target);
             }
 
             return false;
