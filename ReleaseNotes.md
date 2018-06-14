@@ -1,8 +1,0 @@
-Version 3.2.0
--------------
-- Change: When choosing the constructor the child kernel will now regard dependencies fulfilled by any of the parent kernels.
-
-Version 3.0.0.0
----------------
-- Removed: No web builds. All builds are have not reference to web anymore
-- Changed: Implicit bindngs are resolved on the child kernel and not the parent kernel anymore

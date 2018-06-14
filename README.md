@@ -1,4 +1,10 @@
-# Ninject.Extensions.ChildKernel [![NuGet Version](http://img.shields.io/nuget/v/Ninject.Extensions.ChildKernel.svg?style=flat)](https://www.nuget.org/packages/Ninject.Extensions.ChildKernel/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Ninject.Extensions.ChildKernel.svg?style=flat)](https://www.nuget.org/packages/Ninject.Extensions.ChildKernel/)
+# Ninject.Extensions.ChildKernel
+
+[![Build status](https://ci.appveyor.com/api/projects/status/lg793a8v8ldnlp25?svg=true)](https://ci.appveyor.com/project/Ninject/ninject-extensions-childkernel)
+[![codecov](https://codecov.io/gh/ninject/Ninject.Extensions.ChildKernel/branch/master/graph/badge.svg)](https://codecov.io/gh/ninject/Ninject.Extensions.ChildKernel)
+[![NuGet Version](http://img.shields.io/nuget/v/Ninject.Extensions.ChildKernel.svg?style=flat)](https://www.nuget.org/packages/Ninject.Extensions.ChildKernel/) 
+[![NuGet Downloads](http://img.shields.io/nuget/dt/Ninject.Extensions.ChildKernel.svg?style=flat)](https://www.nuget.org/packages/Ninject.Extensions.ChildKernel/)
+
 This Ninject extension allows that child kernels can be defined. A child kernel is a 
 Ninject kernel that has a parent kernel. All requests that it can't resolve are passed
 to the parent kernel.
@@ -47,6 +53,3 @@ And all share the same `bar`.
 
 ## Documentation
 https://github.com/ninject/Ninject.Extensions.ChildKernel/wiki
-
-## CI build status
-[![Build Status](https://teamcity.bbv.ch/app/rest/builds/buildType:(id:bt23)/statusIcon)](http://teamcity.bbv.ch/viewType.html?buildTypeId=bt23&guest=1)

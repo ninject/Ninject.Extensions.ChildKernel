@@ -1,16 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.ChildKernel", "src\Ninject.Extensions.ChildKernel\Ninject.Extensions.ChildKernel.csproj", "{9831975F-FA35-4B8B-A545-1A06852625BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Extensions.ChildKernel", "src\Ninject.Extensions.ChildKernel\Ninject.Extensions.ChildKernel.csproj", "{9831975F-FA35-4B8B-A545-1A06852625BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.ChildKernel.Test", "src\Ninject.Extensions.ChildKernel.Test\Ninject.Extensions.ChildKernel.Test.csproj", "{EB0A05EF-2630-4F8B-92D8-6763509C0D80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Extensions.ChildKernel.Test", "src\Ninject.Extensions.ChildKernel.Test\Ninject.Extensions.ChildKernel.Test.csproj", "{EB0A05EF-2630-4F8B-92D8-6763509C0D80}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{73F5A299-C584-46ED-B401-E6822B3D7904}"
 	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
 		README.md = README.md
-		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Global
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {613917AE-8884-40F0-A2D0-9489B7148063}
 	EndGlobalSection
 EndGlobal
