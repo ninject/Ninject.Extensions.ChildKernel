@@ -33,7 +33,7 @@ build:
 
 test_script:
   - OpenCover.Console.exe -oldstyle -returntargetcode -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Extensions.ChildKernel.Test" -filter:"+[Ninject.Extensions.ChildKernel]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject.Extensions.ChildKernel_coverage.xml"
-  - '%UserProfile%\.nuget\packages\codecov\1.0.4\tools\codecov.exe -f "Ninject.Extensions.ChildKernel_coverage.xml"'
+  - %UserProfile%\.nuget\packages\codecov\1.0.4\tools\codecov.exe -f "Ninject.Extensions.ChildKernel_coverage.xml"
 
 artifacts:
   - path: '**\*.nupkg'
