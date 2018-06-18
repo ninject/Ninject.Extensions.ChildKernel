@@ -10,6 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Codecov" Version="1.0.4">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="FluentAssertions" Version="5.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
