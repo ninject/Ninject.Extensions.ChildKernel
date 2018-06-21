@@ -24,8 +24,8 @@ cache:
 
 before_build:
   - dotnet restore --verbosity quiet
-  - nuget install OpenCover -Version 4.6.519 -OutputDirectory packages -Verbosity quiet
-  - nuget install Codecov -Version 1.0.4 -OutputDirectory packages -Verbosity quiet
+  - nuget install OpenCover -Version 4.6.519 -OutputDirectory packages
+  - nuget install Codecov -Version 1.0.4 -OutputDirectory packages
 
 build:
 
