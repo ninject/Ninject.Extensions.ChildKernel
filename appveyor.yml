@@ -10,7 +10,7 @@ init:
       }
       else
       {
-          Update-AppveyorBuild -Version "3.3.0-ci.$($env:APPVEYOR_BUILD_NUMBER).sha.$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+          Update-AppveyorBuild -Version "3.3.0-ci.$($env:APPVEYOR_BUILD_NUMBER)+sha.$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
       }
 
 dotnet_csproj:
@@ -24,16 +24,16 @@ cache:
 
 before_build:
   - dotnet restore --verbosity quiet
-  - nuget install OpenCover -Version 4.6.519 -OutputDirectory packages -Verbosity quiet
-  - nuget install Codecov -Version 1.0.4 -OutputDirectory packages -Verbosity quiet
+  - nuget install OpenCover -x -Verbosity quiet
+  - nuget install Codecov -x -Verbosity quiet
 
 build:
   project: Ninject.Extensions.ChildKernel.sln
   verbosity: quiet
   
 test_script:
-  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -oldstyle -returntargetcode -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Extensions.ChildKernel.Test" -filter:"+[Ninject.Extensions.ChildKernel]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"C:\projects\ninject-extensions-childkernel\Ninject.Extensions.ChildKernel_coverage.xml"
-  - packages\Codecov.1.0.4\tools\codecov.exe -f "C:\projects\ninject-extensions-childkernel\Ninject.Extensions.ChildKernel_coverage.xml" -v Diagnostic
+  - OpenCover\tools\OpenCover.Console.exe -oldstyle -returntargetcode -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Extensions.ChildKernel.Test" -filter:"+[Ninject.Extensions.ChildKernel]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject.Extensions.ChildKernel_coverage.xml"
+  - Codecov\tools\codecov.exe -f "Ninject.Extensions.ChildKernel_coverage.xml" -v Quiet
 
 artifacts:
   - path: '**\*.nupkg'
