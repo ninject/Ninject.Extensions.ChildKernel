@@ -26,7 +26,7 @@ before_build:
   - dotnet restore --verbosity quiet
 
 build:
-  - verbosity: quiet
+  verbosity: quiet
   
 test_script:
   - nuget install OpenCover -x -Verbosity quiet
