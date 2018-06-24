@@ -23,16 +23,12 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache -> **\*.csproj'
 
 before_build:
-  - dotnet restore --verbosity quiet
-  - nuget install OpenCover -x -Verbosity quiet
-  - nuget install Codecov -x -Verbosity quiet
-
-build:
-  project: Ninject.Extensions.ChildKernel.sln
-  verbosity: quiet
+  - dotnet restore
+  - nuget install OpenCover -x
+  - nuget install Codecov -x
   
 test_script:
-  - OpenCover\tools\OpenCover.Console.exe -oldstyle -returntargetcode -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Extensions.ChildKernel.Test --verbosity quiet" -filter:"+[Ninject.Extensions.ChildKernel]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject.Extensions.ChildKernel_coverage.xml"
+  - OpenCover\tools\OpenCover.Console.exe -oldstyle -returntargetcode -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Extensions.ChildKernel.Test" -filter:"+[Ninject.Extensions.ChildKernel]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject.Extensions.ChildKernel_coverage.xml"
   - Codecov\tools\codecov.exe -f "Ninject.Extensions.ChildKernel_coverage.xml"
 
 artifacts:
